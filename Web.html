@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#111514">
+	<title>World Warrior — Archivo de luchadores</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			color-scheme: dark;
+			--ink: #111514;
+			--panel: #1a201e;
+			--panel-soft: #222a27;
+			--line: #39423e;
+			--paper: #f2f1e9;
+			--muted: #a5afa9;
+			--acid: #d5f36a;
+			--coral: #ff735e;
+			--cyan: #70d5d0;
+			--display: "Barlow Condensed", Impact, sans-serif;
+			--body: "DM Sans", sans-serif;
+		}
+
+		* { box-sizing: border-box; }
+		html { scroll-behavior: smooth; }
+		body {
+			margin: 0;
+			background: var(--ink);
+			color: var(--paper);
+			font-family: var(--body);
+			min-width: 320px;
+		}
+		button, input { font: inherit; }
+		button { color: inherit; }
+		.topbar {
+			height: 64px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 0 clamp(18px, 4vw, 64px);
+			border-bottom: 1px solid #303835;
+			background: #111514;
+		}
+		.brand {
+			display: inline-flex;
+			align-items: center;
+			gap: 11px;
+			color: var(--paper);
+			text-decoration: none;
+			font-family: var(--display);
+			font-size: 21px;
+			font-weight: 800;
+			letter-spacing: .4px;
+			text-transform: uppercase;
+		}
+		.brand-mark {
+			width: 27px;
+			height: 27px;
+			display: grid;
+			place-items: center;
+			background: var(--acid);
+			color: var(--ink);
+			clip-path: polygon(0 0, 100% 0, 77% 100%, 0 100%);
+			font-size: 19px;
+			font-weight: 900;
+		}
+		.topbar-note {
+			display: flex;
+			align-items: center;
+			gap: 9px;
+			color: var(--muted);
+			font-size: 11px;
+			font-weight: 700;
+			letter-spacing: 1.4px;
+			text-transform: uppercase;
+		}
+		.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--acid); }
+
+		.intro {
+			position: relative;
+			overflow: hidden;
+			padding: 46px clamp(18px, 4vw, 64px) 39px;
+			border-bottom: 1px solid #303835;
+			background-color: #1a201e;
+			background-image: radial-gradient(#89918b 0.7px, transparent 0.7px);
+			background-size: 17px 17px;
+		}
+		.intro::before {
+			content: "FIGHT";
+			position: absolute;
+			right: 3%;
+			top: -66px;
+			color: rgba(213, 243, 106, .06);
+			font: 900 clamp(150px, 27vw, 370px)/1 var(--display);
+			pointer-events: none;
+		}
+		.intro-inner { position: relative; max-width: 1450px; margin: auto; }
+		.eyebrow {
+			margin: 0 0 8px;
+			color: var(--acid);
+			font-size: 11px;
+			font-weight: 700;
+			letter-spacing: 2px;
+			text-transform: uppercase;
+		}
+		h1 {
+			max-width: 800px;
+			margin: 0;
+			font: 800 clamp(48px, 7vw, 88px)/.91 var(--display);
+			letter-spacing: .2px;
+			text-transform: uppercase;
+		}
+		.intro-bottom {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 24px;
+			margin-top: 22px;
+		}
+		.intro-copy { max-width: 600px; margin: 0; color: #c1c9c3; font-size: 14px; line-height: 1.65; }
+		.roster-total { flex: 0 0 auto; color: var(--acid); font: 700 16px var(--display); letter-spacing: 1px; text-transform: uppercase; }
+
+		.layout {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) minmax(300px, 370px);
+			gap: 34px;
+			max-width: 1450px;
+			margin: 0 auto;
+			padding: 31px clamp(18px, 4vw, 64px) 70px;
+		}
+		.catalogue { min-width: 0; }
+		.toolbar { display: flex; align-items: center; gap: 14px; margin-bottom: 19px; }
+		.search-wrap { position: relative; flex: 1 1 230px; max-width: 360px; }
+		.search-icon { position: absolute; left: 13px; top: 50%; width: 16px; height: 16px; transform: translateY(-50%); color: #a8b1ab; pointer-events: none; }
+		.search {
+			width: 100%;
+			height: 42px;
+			padding: 0 13px 0 39px;
+			border: 1px solid var(--line);
+			border-radius: 3px;
+			outline: none;
+			background: #191f1d;
+			color: var(--paper);
+			font-size: 13px;
+		}
+		.search:focus { border-color: var(--acid); box-shadow: 0 0 0 2px rgba(213,243,106,.14); }
+		.result-count { margin-left: auto; color: var(--muted); font-size: 12px; white-space: nowrap; }
+		.filters { display: flex; gap: 7px; overflow-x: auto; padding: 0 0 16px; scrollbar-width: thin; scrollbar-color: #59615d transparent; }
+		.filter {
+			flex: 0 0 auto;
+			min-height: 30px;
+			padding: 0 12px;
+			border: 1px solid #3b4540;
+			border-radius: 2px;
+			background: transparent;
+			color: #b8c0ba;
+			cursor: pointer;
+			font-size: 11px;
+			font-weight: 700;
+			text-transform: uppercase;
+			transition: color .16s ease, background .16s ease, border-color .16s ease;
+		}
+		.filter:hover { border-color: var(--acid); color: var(--paper); }
+		.filter[aria-pressed="true"] { border-color: var(--acid); background: var(--acid); color: var(--ink); }
+		.roster-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
+		.fighter-card {
+			position: relative;
+			min-width: 0;
+			padding: 0;
+			overflow: hidden;
+			border: 1px solid #343d39;
+			border-radius: 3px;
+			background: #1a201e;
+			text-align: left;
+			cursor: pointer;
+			transition: border-color .18s ease, transform .18s ease, background .18s ease;
+			animation: arrive .38s both;
+		}
+		.fighter-card:hover { transform: translateY(-3px); border-color: #89918b; }
+		.fighter-card[aria-pressed="true"] { border-color: var(--acid); background: #252d29; box-shadow: inset 0 0 0 1px var(--acid); }
+		.portrait {
+			position: relative;
+			display: block;
+			overflow: hidden;
+			aspect-ratio: 1.36 / 1;
+			background: var(--portrait-color, #28332e);
+			isolation: isolate;
+		}
+		.portrait::before {
+			position: absolute;
+			z-index: -1;
+			content: "";
+			width: 72%;
+			aspect-ratio: 1;
+			right: -16%;
+			bottom: -65%;
+			border: 1px solid rgba(255,255,255,.2);
+			border-radius: 50%;
+			box-shadow: 0 0 0 22px rgba(255,255,255,.045), 0 0 0 44px rgba(255,255,255,.035);
+		}
+		.portrait::after {
+			position: absolute;
+			z-index: -1;
+			content: "";
+			inset: 0;
+			background: linear-gradient(0deg, rgba(9,13,12,.7), transparent 60%);
+		}
+		.portrait img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center 25%; }
+		.portrait-fallback { position: absolute; inset: 0; display: grid; place-items: center; color: rgba(255,255,255,.82); font: 900 clamp(54px, 8vw, 88px)/1 var(--display); opacity: .76; }
+		.portrait.has-image .portrait-fallback { display: none; }
+		.card-index { position: absolute; top: 9px; left: 10px; color: rgba(255,255,255,.74); font: 600 12px var(--display); letter-spacing: 1px; }
+		.card-rank { position: absolute; right: 8px; top: 8px; padding: 4px 6px; background: rgba(17,21,20,.78); color: var(--acid); font-size: 9px; font-weight: 700; letter-spacing: .9px; text-transform: uppercase; }
+		.card-rank.dlc { background: rgba(17,21,20,.86); color: var(--coral); }
+		.card-copy { display: block; padding: 10px 11px 12px; }
+		.card-name { display: block; overflow: hidden; color: var(--paper); font: 700 22px/.98 var(--display); text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+		.card-origin { display: block; margin-top: 5px; overflow: hidden; color: #aab3ad; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+		.empty-state { grid-column: 1 / -1; padding: 35px 15px; border: 1px dashed var(--line); color: var(--muted); text-align: center; font-size: 13px; }
+
+		.detail {
+			align-self: start;
+			position: sticky;
+			top: 18px;
+			overflow: hidden;
+			border: 1px solid #414a45;
+			border-top: 3px solid var(--acid);
+			border-radius: 3px;
+			background: var(--panel);
+		}
+		.detail-head { padding: 17px 18px 15px; border-bottom: 1px solid #343c38; }
+		.detail-kicker { margin: 0 0 5px; color: var(--acid); font-size: 10px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; }
+		.detail-name { margin: 0; font: 800 42px/.98 var(--display); text-transform: uppercase; }
+		.detail-title { margin: 6px 0 0; color: #b4bdb7; font-size: 12px; }
+		.detail-meta { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+		.meta-chip { padding: 4px 7px; border: 1px solid #424c46; color: #d2d9d2; font-size: 9px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; }
+		.detail-body { padding: 15px 18px 18px; }
+		.detail-bio { margin: 0 0 18px; color: #c0c8c2; font-size: 12px; line-height: 1.6; }
+		.move-heading { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 9px; color: #eef0e9; font: 700 19px var(--display); text-transform: uppercase; }
+		.move-heading span { color: var(--muted); font: 600 9px var(--body); letter-spacing: 1px; }
+		.move-list { display: grid; gap: 8px; }
+		.move {
+			padding: 10px;
+			border: 1px solid #37403b;
+			background: #1d2421;
+		}
+		.move-top { display: flex; align-items: start; justify-content: space-between; gap: 8px; }
+		.move-name { color: var(--paper); font-size: 11px; font-weight: 700; }
+		.move-type { color: #8e9a92; font-size: 8px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; white-space: nowrap; }
+		.move-desc { margin: 5px 0 9px; color: #abb5ad; font-size: 10px; line-height: 1.45; }
+		.command { display: flex; align-items: center; gap: 4px; min-height: 25px; }
+		.key {
+			min-width: 24px;
+			height: 23px;
+			display: grid;
+			place-items: center;
+			padding: 0 6px;
+			border: 1px solid #59645d;
+			border-bottom-width: 2px;
+			border-radius: 2px;
+			background: #29312d;
+			color: var(--acid);
+			font: 700 12px var(--display);
+		}
+		.key.attack { color: var(--coral); }
+		.command-hint { margin-left: 5px; color: #8f9a92; font-size: 9px; }
+		.detail-foot { display: flex; justify-content: space-between; gap: 10px; padding: 11px 18px; border-top: 1px solid #343c38; color: #85918a; font-size: 9px; }
+		.detail-foot strong { color: var(--cyan); font-weight: 700; }
+		.footer { padding: 18px clamp(18px, 4vw, 64px); border-top: 1px solid #303835; color: #8e9992; font-size: 10px; line-height: 1.6; }
+		.footer-inner { display: flex; justify-content: space-between; gap: 20px; max-width: 1450px; margin: auto; }
+		.footer p { margin: 0; max-width: 760px; }
+		.footer a { color: var(--cyan); }
+		@keyframes arrive { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+		@media (max-width: 1050px) {
+			.layout { grid-template-columns: minmax(0, 1fr) 320px; gap: 22px; }
+			.roster-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+		}
+		@media (max-width: 740px) {
+			.topbar { height: 56px; }
+			.intro { padding-top: 36px; }
+			.intro-bottom { align-items: start; flex-direction: column; gap: 12px; }
+			.layout { display: flex; flex-direction: column-reverse; padding-top: 18px; }
+			.detail { position: static; width: 100%; }
+			.detail-body { padding-bottom: 14px; }
+			.move-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+			.move { padding: 8px; }
+			.move-top { display: block; }
+			.move-type { display: block; margin-top: 4px; }
+			.command { flex-wrap: wrap; }
+			.command-hint { display: none; }
+			.toolbar { flex-wrap: wrap; }
+			.search-wrap { max-width: none; }
+			.result-count { margin-left: 0; }
+		}
+		@media (max-width: 490px) {
+			.topbar-note { font-size: 9px; letter-spacing: .8px; }
+			.intro-copy { font-size: 13px; }
+			.roster-grid { gap: 9px; }
+			.card-copy { padding: 8px; }
+			.card-name { font-size: 19px; }
+			.card-origin { font-size: 9px; }
+			.portrait { aspect-ratio: 1.12 / 1; }
+			.move-list { grid-template-columns: 1fr; }
+			.move-top { display: flex; }
+			.move-type { display: inline; margin-top: 0; }
+			.command-hint { display: inline; }
+			.footer-inner { flex-direction: column; }
+		}
+		@media (prefers-reduced-motion: reduce) {
+			*, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+		}
+	</style>
+</head>
+<body>
+	<header class="topbar">
+		<a class="brand" href="#inicio" aria-label="World Warrior, inicio"><span class="brand-mark">W</span> World Warrior</a>
+		<div class="topbar-note"><span class="live-dot" aria-hidden="true"></span> Archivo de combatientes</div>
+	</header>
+
+	<section class="intro" id="inicio">
+		<div class="intro-inner">
+			<p class="eyebrow">Street Fighter · Guía de luchadores</p>
+			<h1>Elige tu<br>próximo combate.</h1>
+			<div class="intro-bottom">
+				<p class="intro-copy">Explora estilos, conoce a cada luchador y estudia sus movimientos especiales. Selecciona una ficha para consultar sus comandos.</p>
+				<span class="roster-total" id="roster-total"></span>
+			</div>
+		</div>
+	</section>
+
+	<main class="layout">
+		<section class="catalogue" aria-label="Catálogo de luchadores">
+			<div class="toolbar">
+				<label class="search-wrap">
+					<svg class="search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+					<input class="search" id="search" type="search" placeholder="Buscar luchador o país..." autocomplete="off" aria-label="Buscar luchador o país">
+				</label>
+				<span class="result-count" id="result-count" aria-live="polite"></span>
+			</div>
+			<div class="filters" id="filters" role="group" aria-label="Filtrar por estilo">
+				<button class="filter" type="button" data-filter="all" aria-pressed="true">Todos</button>
+				<button class="filter" type="button" data-filter="shoto" aria-pressed="false">Shoto</button>
+				<button class="filter" type="button" data-filter="rushdown" aria-pressed="false">Rushdown</button>
+				<button class="filter" type="button" data-filter="zoner" aria-pressed="false">Zoner</button>
+				<button class="filter" type="button" data-filter="grappler" aria-pressed="false">Grappler</button>
+				<button class="filter" type="button" data-filter="balanced" aria-pressed="false">Técnico / mixto</button>
+			</div>
+			<div class="roster-grid" id="roster" aria-live="polite"></div>
+		</section>
+
+		<aside class="detail" id="detail" aria-label="Ficha del luchador seleccionado" aria-live="polite"></aside>
+	</main>
+
+	<footer class="footer">
+		<div class="footer-inner">
+			<p>Proyecto de fans, sin afiliación con Capcom. Street Fighter y sus personajes son propiedad de Capcom. Las imágenes, cuando están disponibles, se enlazan desde Wikipedia.</p>
+			<p>Comandos en notación clásica: <strong>P</strong> = puñetazo · <strong>K</strong> = patada</p>
+		</div>
+	</footer>
+
+	<script>
+		const fighters = [
+			{ id: "ryu", name: "Ryu", title: "El guerrero errante", country: "Japón", style: "shoto", styleName: "Shoto", color: "#70483d", wiki: "Ryu (Street Fighter)", bio: "Un artista marcial que recorre el mundo en busca de superación. Su estilo equilibrado enseña los fundamentos del combate.", moves: [
+				["Hadoken", "Proyectil", "Lanza una esfera de energía para controlar el espacio a distancia.", ["↓", "↘", "→", "＋", "P"]],
+				["Shoryuken", "Antiaéreo", "Un puñetazo ascendente que castiga a quien salta hacia él.", ["→", "↓", "↘", "＋", "P"]],
+				["Tatsumaki Senpukyaku", "Avance", "Gira con una patada y cruza el escenario, atravesando al rival.", ["↓", "↙", "←", "＋", "K"]]
+			]},
+			{ id: "ken", name: "Ken", title: "El dragón carmesí", country: "Estados Unidos", style: "shoto", styleName: "Shoto", color: "#853a34", wiki: "Ken Masters", bio: "Rival y amigo de Ryu, Ken convierte la disciplina compartida en un estilo más agresivo y explosivo.", moves: [
+				["Hadoken", "Proyectil", "Dispara energía para mantener al oponente a raya.", ["↓", "↘", "→", "＋", "P"]],
+				["Shoryuken", "Antiaéreo", "Un uppercut veloz para interceptar saltos y abrir paso.", ["→", "↓", "↘", "＋", "P"]],
+				["Tatsumaki Senpukyaku", "Avance", "Una patada giratoria que impulsa a Ken hacia delante.", ["↓", "↙", "←", "＋", "K"]]
+			]},
+			{ id: "luke", name: "Luke", title: "El contratista enérgico", country: "Estados Unidos", style: "balanced", styleName: "Versátil", color: "#526c56", wiki: "Luke Sullivan (Street Fighter)", bio: "Un luchador moderno de MMA que combina presión, golpes pesados y proyectiles de arena.", moves: [
+				["Sand Blast", "Proyectil", "Un disparo de arena rápido para desafiar desde media distancia.", ["←", "＋", "P"]],
+				["Flash Knuckle", "Carga", "Carga el puño y suelta un golpe potente; mantener cambia su fuerza.", ["↓", "↙", "←", "＋", "P"]],
+				["Rising Uppercut", "Antiaéreo", "Se eleva con un uppercut que corta el avance aéreo.", ["→", "↓", "↘", "＋", "P"]]
+			]},
+			{ id: "jamie", name: "Jamie", title: "El puño borracho", country: "Hong Kong", style: "rushdown", styleName: "Rushdown", color: "#826342", wiki: "Jamie (Street Fighter)", bio: "Un bailarín callejero inspirado en el kung-fu. Al beber de su calabaza, amplía su repertorio de combate.", moves: [
+				["Freeflow Strikes", "Cadena", "Encadena golpes de palma y continúa la presión de cerca.", ["↓", "↘", "→", "＋", "P"]],
+				["Swagger Step", "Avance", "Se desliza hacia delante y cambia el ritmo del enfrentamiento.", ["↓", "↙", "←", "＋", "K"]],
+				["Luminous Dive Kick", "Aéreo", "Se lanza en diagonal desde el aire con una patada descendente.", ["↓", "＋", "K"]]
+			]},
+			{ id: "chun-li", name: "Chun-Li", title: "La mujer más fuerte del mundo", country: "China", style: "rushdown", styleName: "Rushdown", color: "#3d6471", wiki: "Chun-Li", bio: "Agente de la Interpol y maestra del kung-fu. Sus piernas veloces dominan el espacio y castigan cualquier error.", moves: [
+				["Kikoken", "Proyectil", "Concentra el chi en una onda que avanza por el escenario.", ["←", "mantener", "→", "＋", "P"]],
+				["Spinning Bird Kick", "Antiaéreo", "Gira en vertical con ambas piernas para cubrir el espacio aéreo.", ["↓", "mantener", "↑", "＋", "K"]],
+				["Hundred Lightning Kicks", "Ráfaga", "Una serie rapidísima de patadas presiona a corta distancia.", ["K", "repetir"]]
+			]},
+			{ id: "guile", name: "Guile", title: "El soldado americano", country: "Estados Unidos", style: "zoner", styleName: "Zoner", color: "#536341", wiki: "Guile (Street Fighter)", bio: "Militar de pocas palabras y defensa impenetrable. Sus ataques de carga controlan el ritmo desde lejos.", moves: [
+				["Sonic Boom", "Proyectil", "Una onda horizontal para controlar el avance del rival.", ["←", "mantener", "→", "＋", "P"]],
+				["Flash Kick", "Antiaéreo", "Una voltereta con patada ascendente ideal contra saltos.", ["↓", "mantener", "↑", "＋", "K"]],
+				["Sonic Blade", "Control", "Crea una hoja de energía que refuerza sus proyectiles.", ["↓", "↘", "→", "＋", "K"]]
+			]},
+			{ id: "kimberly", name: "Kimberly", title: "La kunoichi del hip-hop", country: "Estados Unidos", style: "rushdown", styleName: "Rushdown", color: "#69773f", wiki: "Kimberly (Street Fighter)", bio: "Estudiante de Bushinryu, artista y velocista. Sus bombas de pintura y desplazamientos cambian el ángulo del combate.", moves: [
+				["Bushin Senpukyaku", "Avance", "Una secuencia giratoria de patadas que atraviesa al rival.", ["↓", "↙", "←", "＋", "K"]],
+				["Vagabond Edge", "Proyectil", "Lanza una lata de aerosol explosiva hacia delante.", ["↓", "↘", "→", "＋", "P"]],
+				["Hidden Variable", "Engaño", "Desaparece en una nube de humo para atacar desde otro ángulo.", ["↓", "↘", "→", "＋", "K"]]
+			]},
+			{ id: "juri", name: "Juri", title: "La araña del Hado", country: "Corea del Sur", style: "rushdown", styleName: "Rushdown", color: "#704d75", wiki: "Juri Han", bio: "Una luchadora imprevisible que disfruta desestabilizando al rival con fintas, patadas y energía Fuha.", moves: [
+				["Fuhajin", "Preparación", "Almacena energía Fuha para habilitar ataques especiales.", ["↓", "↙", "←", "＋", "K"]],
+				["Saihasho", "Proyectil", "Dispara una onda de energía a ras del suelo.", ["↓", "↘", "→", "＋", "P"]],
+				["Tensenrin", "Antiaéreo", "Una patada ascendente giratoria que atrapa al rival en el aire.", ["→", "↓", "↘", "＋", "K"]]
+			]},
+			{ id: "blanka", name: "Blanka", title: "El monstruo eléctrico", country: "Brasil", style: "rushdown", styleName: "Rushdown", color: "#758b3c", wiki: "Blanka", bio: "Criado en la selva, combina movimientos animales y descargas eléctricas con trayectorias impredecibles.", moves: [
+				["Electric Thunder", "Eléctrico", "Descarga electricidad a su alrededor con una ráfaga de golpes.", ["P", "repetir"]],
+				["Rolling Attack", "Avance", "Se enrolla y rueda hacia delante como un proyectil viviente.", ["←", "mantener", "→", "＋", "P"]],
+				["Wild Hunt", "Agarre", "Salta hacia el rival y lo derriba con un ataque salvaje.", ["↓", "↙", "←", "＋", "K"]]
+			]},
+			{ id: "dhalsim", name: "Dhalsim", title: "El yogui de fuego", country: "India", style: "zoner", styleName: "Zoner", color: "#a35232", wiki: "Dhalsim", bio: "Monje y maestro del yoga. Sus extremidades elásticas y llamas mantienen al oponente a una distancia inusual.", moves: [
+				["Yoga Fire", "Proyectil", "Escupe una bola de fuego para frenar el avance enemigo.", ["↓", "↘", "→", "＋", "P"]],
+				["Yoga Flame", "Llama", "Exhala fuego en un arco amplio de corto alcance.", ["←", "↙", "↓", "↘", "→", "＋", "P"]],
+				["Yoga Comet", "Aéreo", "Lanza una bola de fuego en diagonal desde el aire.", ["↓", "↘", "→", "＋", "P", "(aire)"]]
+			]},
+			{ id: "e-honda", name: "E. Honda", title: "El embajador del sumo", country: "Japón", style: "grappler", styleName: "Grappler", color: "#666e83", wiki: "E. Honda", bio: "Campeón de sumo que busca llevar su disciplina al mundo. Su peso y embestidas hacen temblar la pantalla.", moves: [
+				["Hundred Hand Slap", "Ráfaga", "Golpea con las palmas a velocidad extraordinaria.", ["P", "repetir"]],
+				["Sumo Headbutt", "Avance", "Se lanza de cabeza en horizontal desde el otro lado de la pantalla.", ["←", "mantener", "→", "＋", "P"]],
+				["Oicho Throw", "Agarre", "Sujeta al rival y lo estrella contra el suelo con fuerza.", ["cerca", "→", "＋", "P"]]
+			]},
+			{ id: "dee-jay", name: "Dee Jay", title: "El hombre del ritmo", country: "Jamaica", style: "balanced", styleName: "Versátil", color: "#b56b31", wiki: "Dee Jay (Street Fighter)", bio: "Músico y luchador que mezcla kickboxing con ritmo caribeño. Sus fintas esconden ataques por ambos lados.", moves: [
+				["Air Slasher", "Proyectil", "Envía una onda cortante que ocupa el espacio frontal.", ["←", "mantener", "→", "＋", "P"]],
+				["Double Rolling Sobat", "Avance", "Dos patadas giratorias que recorren el suelo con ritmo.", ["↓", "↙", "←", "＋", "K"]],
+				["Jackknife Maximum", "Antiaéreo", "Salta con una patada ascendente de varias etapas.", ["↓", "mantener", "↑", "＋", "K"]]
+			]},
+			{ id: "manon", name: "Manon", title: "La bailarina de judo", country: "Francia", style: "grappler", styleName: "Grappler", color: "#9a626c", wiki: "Manon (Street Fighter)", bio: "Modelo y campeona de judo que encadena agarres elegantes. Cada lanzamiento exitoso aumenta su medidor de medallas.", moves: [
+				["Manège Doré", "Agarre", "Un lanzamiento de judo que mejora con sus medallas acumuladas.", ["cerca", "→", "＋", "P"]],
+				["Rond-point", "Patada", "Una patada giratoria que avanza con alcance sorprendente.", ["↓", "↘", "→", "＋", "K"]],
+				["Renversé", "Finta", "Se desplaza con una voltereta y puede continuar con un agarre.", ["↓", "↙", "←", "＋", "K"]]
+			]},
+			{ id: "marisa", name: "Marisa", title: "La colosal gladiadora", country: "Italia", style: "grappler", styleName: "Grappler", color: "#9c593c", wiki: "Marisa (Street Fighter)", bio: "Joyera y luchadora italiana de fuerza monumental. Sus golpes cargados atraviesan la defensa rival.", moves: [
+				["Gladius", "Carga", "Avanza con un puñetazo que puede cargarse para romper la guardia.", ["↓", "↘", "→", "＋", "P"]],
+				["Quadriga", "Avance", "Una secuencia de rodillazos y patadas que empuja hacia delante.", ["↓", "↙", "←", "＋", "K"]],
+				["Phalanx", "Antiaéreo", "Un salto con el hombro que desafía proyectiles y ataques aéreos.", ["→", "↓", "↘", "＋", "P"]]
+			]},
+			{ id: "jp", name: "JP", title: "El estratega de Nayshall", country: "Rusia", style: "zoner", styleName: "Zoner", color: "#745d4c", wiki: "JP (Street Fighter)", bio: "Un calculador maestro del Psycho Power que manipula el espacio con trampas, espinas y portales.", moves: [
+				["Triglav", "Trampa", "Invoca una espina psíquica desde el suelo a distancia.", ["↓", "↘", "→", "＋", "P"]],
+				["Torbalan", "Proyectil", "Proyecta una figura de Psycho Power con trayectorias variables.", ["↓", "↙", "←", "＋", "P"]],
+				["Departure", "Portal", "Abre un portal para reposicionarse o crear una amenaza adicional.", ["↓", "↘", "→", "＋", "K"]]
+			]},
+			{ id: "zangief", name: "Zangief", title: "El ciclón rojo", country: "Rusia", style: "grappler", styleName: "Grappler", color: "#893f3b", wiki: "Zangief", bio: "Luchador profesional de enorme corazón y tamaño. Si llega a agarrarte, sus llaves pueden decidir la ronda.", moves: [
+				["Screw Piledriver", "Agarre", "Suplex giratorio devastador que requiere estar junto al oponente.", ["360°", "＋", "P"]],
+				["Double Lariat", "Ráfaga", "Gira con ambos brazos extendidos y golpea a su alrededor.", ["P", "＋", "P"]],
+				["Siberian Express", "Agarre", "Corre a través del escenario y atrapa al rival en una embestida.", ["↓", "↙", "←", "＋", "K"]]
+			]},
+			{ id: "lily", name: "Lily", title: "La pequeña tormenta", country: "México", style: "rushdown", styleName: "Rushdown", color: "#5b816d", wiki: "Lily (Street Fighter)", bio: "Luchadora de los Thunderfoot que pelea con dos garrotes. El viento potencia sus embestidas y golpes.", moves: [
+				["Condor Wind", "Preparación", "Invoca viento para potenciar sus siguientes movimientos especiales.", ["↓", "↙", "←", "＋", "P"]],
+				["Condor Spire", "Avance", "Se impulsa hacia delante con los garrotes por delante.", ["↓", "↘", "→", "＋", "P"]],
+				["Tomahawk Buster", "Antiaéreo", "Un golpe ascendente con sus garrotes para cubrir el cielo.", ["→", "↓", "↘", "＋", "P"]]
+			]},
+			{ id: "cammy", name: "Cammy", title: "La asesina delta", country: "Reino Unido", style: "rushdown", styleName: "Rushdown", color: "#4a6956", wiki: "Cammy White", bio: "Agente de operaciones especiales, veloz y precisa. Se desliza bajo la guardia para castigar desde cualquier ángulo.", moves: [
+				["Spiral Arrow", "Avance", "Una patada giratoria baja que recorre el suelo.", ["↓", "↘", "→", "＋", "K"]],
+				["Cannon Spike", "Antiaéreo", "Un salto con patada vertical para castigar al rival en el aire.", ["→", "↓", "↘", "＋", "K"]],
+				["Hooligan Combination", "Finta", "Un salto con varias opciones de ataque y agarre al aterrizar.", ["↓", "↙", "←", "＋", "P"]]
+			]},
+			{ id: "rashid", name: "Rashid", title: "El águila del desierto", country: "Oriente Medio", style: "rushdown", styleName: "Rushdown", color: "#947d45", wiki: "Rashid (Street Fighter)", dlc: "Año 1", bio: "Aventurero veloz que aprovecha las corrientes de aire para cambiar de dirección y mantener la presión.", moves: [
+				["Spinning Mixer", "Avance", "Gira con una ráfaga de patadas que puede elevar al rival.", ["↓", "↘", "→", "＋", "P"]],
+				["Arabian Cyclone", "Viento", "Crea un torbellino que sirve de cobertura y abre rutas de ataque.", ["↓", "↙", "←", "＋", "K"]],
+				["Eagle Spike", "Aéreo", "Se impulsa en diagonal con una patada de largo alcance.", ["↓", "↙", "←", "＋", "K"]]
+			]},
+			{ id: "aki", name: "A.K.I.", title: "La flor venenosa", country: "China", style: "technical", styleName: "Técnica", color: "#855364", wiki: "A.K.I. (Street Fighter)", dlc: "Año 1", bio: "Discípula letal que envenena al oponente y acecha desde ángulos engañosos con movimientos serpenteantes.", moves: [
+				["Nightshade Pulse", "Veneno", "Lanza una burbuja venenosa que puede detonar a distancia.", ["↓", "↘", "→", "＋", "P"]],
+				["蛇頭鞭 (Serpent Lash)", "Avance", "Extiende sus garras en un latigazo largo y venenoso.", ["↓", "↙", "←", "＋", "P"]],
+				["Orchid Spring", "Salto", "Se impulsa con una voltereta y cae con un golpe inesperado.", ["↓", "↙", "←", "＋", "K"]]
+			]},
+			{ id: "ed", name: "Ed", title: "El boxeador psíquico", country: "Alemania", style: "rushdown", styleName: "Rushdown", color: "#4b6480", wiki: "Ed (Street Fighter)", dlc: "Año 1", bio: "Boxeador de guardia zurda que canaliza Psycho Power en golpes rápidos y fintas de alcance medio.", moves: [
+				["Psycho Spark", "Proyectil", "Concentra Psycho Power en un golpe que puede rematarse con un disparo.", ["↓", "↘", "→", "＋", "P"]],
+				["Psycho Upper", "Antiaéreo", "Un uppercut psíquico que intercepta saltos y cierra cadenas.", ["→", "↓", "↘", "＋", "P"]],
+				["Kill Rush", "Finta", "Un desplazamiento rápido con opciones de golpe o retirada.", ["↓", "↙", "←", "＋", "K"]]
+			]},
+			{ id: "akuma", name: "Akuma", title: "El maestro del puño", country: "Japón", style: "shoto", styleName: "Shoto", color: "#733d3e", wiki: "Akuma (Street Fighter)", dlc: "Año 1", bio: "Guerrero consumido por el Satsui no Hado, con un repertorio clásico y una ofensiva feroz.", moves: [
+				["Gou Hadoken", "Proyectil", "Lanza una esfera de energía para dominar la distancia.", ["↓", "↘", "→", "＋", "P"]],
+				["Gou Shoryuken", "Antiaéreo", "Un uppercut devastador para castigar al rival en el aire.", ["→", "↓", "↘", "＋", "P"]],
+				[" Tatsumaki Zankukyaku", "Avance", "Una patada giratoria que atraviesa el espacio frontal.", ["↓", "↙", "←", "＋", "K"]]
+			]},
+			{ id: "bison", name: "M. Bison", title: "El tirano renacido", country: "Desconocido", style: "zoner", styleName: "Zoner", color: "#704c72", wiki: "M. Bison", dlc: "Año 2", bio: "El antiguo líder de Shadaloo vuelve envuelto en Psycho Power, con presión explosiva y embestidas aéreas.", moves: [
+				["Psycho Crusher", "Avance", "Se envuelve en Psycho Power y atraviesa al oponente en línea recta.", ["←", "mantener", "→", "＋", "P"]],
+				["Double Knee Press", "Avance", "Dos rodillazos voladores que recorren el escenario.", ["←", "mantener", "→", "＋", "K"]],
+				["Backfist Combo", "Marca", "Un golpe de revés que coloca una bomba psíquica sobre el rival.", ["↓", "↙", "←", "＋", "P"]]
+			]},
+			{ id: "terry", name: "Terry", title: "El lobo hambriento", country: "Estados Unidos", style: "shoto", styleName: "Shoto", color: "#a75c37", wiki: "Terry Bogard", dlc: "Año 2", bio: "Héroe de South Town y estrella invitada de Fatal Fury; combina golpes directos con proyectiles y cargas.", moves: [
+				["Power Wave", "Proyectil", "Golpea el suelo y envía una onda de energía hacia delante.", ["↓", "↘", "→", "＋", "P"]],
+				["Burning Knuckle", "Avance", "Carga el puño y se lanza con un golpe de gran alcance.", ["↓", "↙", "←", "＋", "P"]],
+				["Crack Shoot", "Salto", "Salta con una patada giratoria que cae sobre el rival.", ["↓", "↙", "←", "＋", "K"]]
+			]},
+			{ id: "mai", name: "Mai", title: "La mariposa ardiente", country: "Japón", style: "rushdown", styleName: "Rushdown", color: "#a84445", wiki: "Mai Shiranui", dlc: "Año 2", bio: "Maestra del estilo Shiranui y artista invitada de Fatal Fury, veloz con abanicos, llamas y saltos engañosos.", moves: [
+				["Kachousen", "Proyectil", "Lanza su abanico para presionar desde media distancia.", ["↓", "↘", "→", "＋", "P"]],
+				["Ryuuenbu", "Llama", "Gira envuelta en fuego para golpear a corta distancia.", ["↓", "↙", "←", "＋", "K"]],
+				["Hissatsu Shinobi Bachi", "Avance", "Se lanza hacia delante con una embestida de fuego.", ["↓", "↘", "→", "＋", "K"]]
+			]},
+			{ id: "elena", name: "Elena", title: "La princesa de la sabana", country: "Kenia", style: "balanced", styleName: "Versátil", color: "#62835e", wiki: "Elena (Street Fighter)", dlc: "Año 2", bio: "Luchadora keniana que mezcla capoeira, patadas acrobáticas y una defensa capaz de recuperar fuerzas.", moves: [
+				["Rhino Horn", "Avance", "Corre hacia delante con una patada baja de largo alcance.", ["↓", "↙", "←", "＋", "K"]],
+				["Scratch Wheel", "Antiaéreo", "Una patada ascendente giratoria que cubre el espacio aéreo.", ["→", "↓", "↘", "＋", "K"]],
+				["Lynx Tail", "Patada", "Una patada acrobática que cambia el ritmo a media distancia.", ["↓", "↘", "→", "＋", "K"]]
+			]},
+			{ id: "sagat", name: "Sagat", title: "El emperador del Muay Thai", country: "Tailandia", style: "zoner", styleName: "Zoner", color: "#927142", wiki: "Sagat", dlc: "Año 3", bio: "Gigante del Muay Thai que controla el combate con golpes largos y sus icónicos Tiger Shots.", moves: [
+				["High Tiger Shot", "Proyectil", "Dispara una bola de fuego alta para frenar saltos y avances.", ["↓", "↘", "→", "＋", "P"]],
+				["Low Tiger Shot", "Proyectil", "Una onda baja que obliga al rival a reaccionar desde el suelo.", ["↓", "↘", "→", "＋", "K"]],
+				["Tiger Uppercut", "Antiaéreo", "Un uppercut de gran alcance que defiende el espacio aéreo.", ["→", "↓", "↘", "＋", "P"]]
+			]},
+			{ id: "viper", name: "C. Viper", title: "La agente encubierta", country: "Estados Unidos", style: "technical", styleName: "Técnica", color: "#9b593f", wiki: "Crimson Viper", dlc: "Año 3", bio: "Agente e inventora que combina dispositivos sísmicos, fuego y propulsores para atacar desde varios ángulos.", moves: [
+				["Seismic Hammer", "Suelo", "Golpea el suelo con un guante sísmico y alcanza al rival a distancia.", ["↓", "↙", "←", "＋", "P"]],
+				["Thunder Knuckle", "Avance", "Se impulsa con un propulsor y ataca con un puñetazo eléctrico.", ["↓", "↘", "→", "＋", "P"]],
+				["Burning Kick", "Aéreo", "Activa sus propulsores para caer con una patada flamígera.", ["↓", "↘", "→", "＋", "K"]]
+			]},
+			{ id: "alex", name: "Alex", title: "El luchador de Nueva York", country: "Estados Unidos", style: "grappler", styleName: "Grappler", color: "#527957", wiki: "Alex (Street Fighter)", dlc: "Año 3", bio: "Luchador callejero de gran potencia que mezcla agarres, golpes cargados y ataques de hombro.", moves: [
+				["Flash Chop", "Golpe", "Un golpe de palma contundente que puede iniciar una cadena.", ["↓", "↘", "→", "＋", "P"]],
+				["Power Bomb", "Agarre", "Sujeta al rival de cerca y lo estrella contra el suelo.", ["cerca", "→", "＋", "P"]],
+				["Slash Elbow", "Avance", "Se lanza hacia delante con un codazo de gran alcance.", ["←", "mantener", "→", "＋", "P"]]
+			]},
+			{ id: "ingrid", name: "Ingrid", title: "La viajera solar", country: "Desconocido", style: "technical", styleName: "Técnica", color: "#b38b52", wiki: "Ingrid (Capcom)", dlc: "Año 3", bio: "Enigmática viajera con poderes solares y desplazamientos singulares que descolocan al oponente.", moves: [
+				["Sunshot", "Proyectil", "Concentra energía solar y la lanza en una esfera luminosa.", ["↓", "↘", "→", "＋", "P"]],
+				["Sun Rise", "Antiaéreo", "Se eleva con un destello de energía para cubrir los saltos.", ["→", "↓", "↘", "＋", "K"]],
+				["Solar Burst", "Ráfaga", "Libera una descarga solar que presiona a corta distancia.", ["↓", "↙", "←", "＋", "P"]]
+			]}
+		];
+
+		const roster = document.querySelector("#roster");
+		const detail = document.querySelector("#detail");
+		const search = document.querySelector("#search");
+		const resultCount = document.querySelector("#result-count");
+		const rosterTotal = document.querySelector("#roster-total");
+		let activeFilter = "all";
+		let selectedId = "ryu";
+
+		function keyMarkup(token) {
+			const isAttack = /^[PK]$/.test(token);
+			return `<span class="key${isAttack ? " attack" : ""}">${token}</span>`;
+		}
+
+		function renderDetail(fighter) {
+			detail.innerHTML = `
+				<div class="detail-head">
+					<p class="detail-kicker">Ficha del combatiente</p>
+					<h2 class="detail-name">${fighter.name}</h2>
+					<p class="detail-title">${fighter.title}</p>
+					<div class="detail-meta"><span class="meta-chip">${fighter.country}</span><span class="meta-chip">${fighter.styleName}</span>${fighter.dlc ? `<span class="meta-chip">DLC ${fighter.dlc}</span>` : ""}</div>
+				</div>
+				<div class="detail-body">
+					<p class="detail-bio">${fighter.bio}</p>
+					<h3 class="move-heading">Técnicas especiales <span>COMANDOS CLÁSICOS</span></h3>
+					<div class="move-list">${fighter.moves.map(move => `
+						<article class="move">
+							<div class="move-top"><span class="move-name">${move[0]}</span><span class="move-type">${move[1]}</span></div>
+							<p class="move-desc">${move[2]}</p>
+							<div class="command" aria-label="Comando: ${move[3].join(" ")}">${move[3].map(keyMarkup).join("")}<span class="command-hint">${move[3].includes("mantener") ? "carga" : "+".includes(move[3][0]) ? "" : "entrada"}</span></div>
+						</article>`).join("")}</div>
+				</div>
+				<div class="detail-foot"><span>ESTILO <strong>${fighter.styleName.toUpperCase()}</strong></span><span>ORIGEN <strong>${fighter.country.toUpperCase()}</strong></span></div>`;
+		}
+
+		function renderRoster() {
+			rosterTotal.textContent = `${fighters.length} luchadores · 01—${String(fighters.length).padStart(2, "0")}`;
+			const query = search.value.trim().toLocaleLowerCase("es");
+			const visible = fighters.filter(fighter => {
+				const matchesFilter = activeFilter === "all" || fighter.style === activeFilter;
+				const matchesSearch = `${fighter.name} ${fighter.country} ${fighter.title} ${fighter.styleName} ${fighter.dlc || ""}`.toLocaleLowerCase("es").includes(query);
+				return matchesFilter && matchesSearch;
+			});
+			resultCount.textContent = `${visible.length} ${visible.length === 1 ? "luchador" : "luchadores"}`;
+			roster.innerHTML = visible.length ? visible.map((fighter, index) => `
+				<button class="fighter-card" type="button" data-id="${fighter.id}" aria-pressed="${fighter.id === selectedId}" style="--portrait-color:${fighter.color};animation-delay:${Math.min(index * 25, 250)}ms">
+					<span class="portrait" id="portrait-${fighter.id}"><span class="portrait-fallback" aria-hidden="true">${fighter.name.split(/[- .]/).map(part => part[0]).join("").slice(0, 2)}</span><span class="card-index">${String(fighters.indexOf(fighter) + 1).padStart(2, "0")}</span><span class="card-rank${fighter.dlc ? " dlc" : ""}">${fighter.dlc ? `DLC · ${fighter.dlc}` : fighter.styleName}</span></span>
+					<span class="card-copy"><span class="card-name">${fighter.name}</span><span class="card-origin">${fighter.title} · ${fighter.country}</span></span>
+				</button>`).join("") : `<div class="empty-state">No encontramos luchadores con esa búsqueda.</div>`;
+			document.querySelectorAll(".fighter-card").forEach(card => card.addEventListener("click", () => selectFighter(card.dataset.id)));
+			loadPortraits(visible);
+		}
+
+		function loadPortraits(list) {
+			const pages = list.filter(fighter => !document.querySelector(`#portrait-${fighter.id} img`));
+			if (!pages.length) return;
+			const titles = pages.map(fighter => fighter.wiki).join("|");
+			const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages&piprop=thumbnail&pithumbsize=480&titles=${encodeURIComponent(titles)}&origin=*`;
+			fetch(url).then(response => response.ok ? response.json() : Promise.reject()).then(data => {
+				const byTitle = new Map(pages.map(fighter => [fighter.wiki.replaceAll("_", " "), fighter]));
+				Object.values(data.query.pages).forEach(page => {
+					const fighter = byTitle.get(page.title);
+					const portrait = fighter && document.querySelector(`#portrait-${fighter.id}`);
+					if (!portrait || !page.thumbnail?.source) return;
+					const image = new Image();
+					image.alt = `Imagen de ${fighter.name}`;
+					image.loading = "lazy";
+					image.onload = () => portrait.classList.add("has-image");
+					image.src = page.thumbnail.source;
+					portrait.prepend(image);
+				});
+			}).catch(() => {});
+		}
+
+		function selectFighter(id) {
+			const fighter = fighters.find(item => item.id === id);
+			if (!fighter) return;
+			selectedId = id;
+			renderDetail(fighter);
+			document.querySelectorAll(".fighter-card").forEach(card => card.setAttribute("aria-pressed", String(card.dataset.id === id)));
+		}
+
+		document.querySelector("#filters").addEventListener("click", event => {
+			const button = event.target.closest("[data-filter]");
+			if (!button) return;
+			activeFilter = button.dataset.filter;
+			document.querySelectorAll(".filter").forEach(filter => filter.setAttribute("aria-pressed", String(filter === button)));
+			renderRoster();
+		});
+		search.addEventListener("input", renderRoster);
+		renderDetail(fighters[0]);
+		renderRoster();
+	</script>
+</body>
+</html>
