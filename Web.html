@@ -213,7 +213,6 @@
 		.portrait.has-image .portrait-fallback { display: none; }
 		.card-index { position: absolute; top: 9px; left: 10px; color: rgba(255,255,255,.74); font: 600 12px var(--display); letter-spacing: 1px; }
 		.card-rank { position: absolute; right: 8px; top: 8px; padding: 4px 6px; background: rgba(17,21,20,.78); color: var(--acid); font-size: 9px; font-weight: 700; letter-spacing: .9px; text-transform: uppercase; }
-		.card-rank.dlc { background: rgba(17,21,20,.86); color: var(--coral); }
 		.card-copy { display: block; padding: 10px 11px 12px; }
 		.card-name { display: block; overflow: hidden; color: var(--paper); font: 700 22px/.98 var(--display); text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
 		.card-origin { display: block; margin-top: 5px; overflow: hidden; color: #aab3ad; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
@@ -344,7 +343,8 @@
 				<button class="filter" type="button" data-filter="rushdown" aria-pressed="false">Rushdown</button>
 				<button class="filter" type="button" data-filter="zoner" aria-pressed="false">Zoner</button>
 				<button class="filter" type="button" data-filter="grappler" aria-pressed="false">Grappler</button>
-				<button class="filter" type="button" data-filter="balanced" aria-pressed="false">Técnico / mixto</button>
+				<button class="filter" type="button" data-filter="technical" aria-pressed="false">Técnico</button>
+				<button class="filter" type="button" data-filter="balanced" aria-pressed="false">Versátil</button>
 			</div>
 			<div class="roster-grid" id="roster" aria-live="polite"></div>
 		</section>
@@ -354,7 +354,7 @@
 
 	<footer class="footer">
 		<div class="footer-inner">
-			<p>Proyecto de fans, sin afiliación con Capcom. Street Fighter y sus personajes son propiedad de Capcom. Las imágenes, cuando están disponibles, se enlazan desde Wikipedia.</p>
+			<p>Proyecto de fans, sin afiliación con Capcom. Street Fighter y sus personajes son propiedad de Capcom. <a href="https://www.streetfighter.com/6/character" target="_blank" rel="noreferrer">Retratos oficiales de Capcom</a>; requieren conexión a internet.</p>
 			<p>Comandos en notación clásica: <strong>P</strong> = puñetazo · <strong>K</strong> = patada</p>
 		</div>
 	</footer>
@@ -371,7 +371,7 @@
 				["Shoryuken", "Antiaéreo", "Un uppercut veloz para interceptar saltos y abrir paso.", ["→", "↓", "↘", "＋", "P"]],
 				["Tatsumaki Senpukyaku", "Avance", "Una patada giratoria que impulsa a Ken hacia delante.", ["↓", "↙", "←", "＋", "K"]]
 			]},
-			{ id: "luke", name: "Luke", title: "El contratista enérgico", country: "Estados Unidos", style: "balanced", styleName: "Versátil", color: "#526c56", wiki: "Luke Sullivan (Street Fighter)", bio: "Un luchador moderno de MMA que combina presión, golpes pesados y proyectiles de arena.", moves: [
+			{ id: "luke", name: "Luke", title: "El contratista enérgico", country: "Estados Unidos", style: "shoto", styleName: "Shoto", color: "#526c56", wiki: "Luke Sullivan (Street Fighter)", bio: "Un luchador moderno de MMA que combina presión, golpes pesados y proyectiles de arena.", moves: [
 				["Sand Blast", "Proyectil", "Un disparo de arena rápido para desafiar desde media distancia.", ["←", "＋", "P"]],
 				["Flash Knuckle", "Carga", "Carga el puño y suelta un golpe potente; mantener cambia su fuerza.", ["↓", "↙", "←", "＋", "P"]],
 				["Rising Uppercut", "Antiaéreo", "Se eleva con un uppercut que corta el avance aéreo.", ["→", "↓", "↘", "＋", "P"]]
@@ -471,7 +471,7 @@
 				["Gou Shoryuken", "Antiaéreo", "Un uppercut devastador para castigar al rival en el aire.", ["→", "↓", "↘", "＋", "P"]],
 				[" Tatsumaki Zankukyaku", "Avance", "Una patada giratoria que atraviesa el espacio frontal.", ["↓", "↙", "←", "＋", "K"]]
 			]},
-			{ id: "bison", name: "M. Bison", title: "El tirano renacido", country: "Desconocido", style: "zoner", styleName: "Zoner", color: "#704c72", wiki: "M. Bison", dlc: "Año 2", bio: "El antiguo líder de Shadaloo vuelve envuelto en Psycho Power, con presión explosiva y embestidas aéreas.", moves: [
+			{ id: "bison", name: "M. Bison", title: "El tirano renacido", country: "Desconocido", style: "technical", styleName: "Técnica", color: "#704c72", wiki: "M. Bison", dlc: "Año 2", bio: "El antiguo líder de Shadaloo vuelve envuelto en Psycho Power, con presión explosiva y embestidas aéreas.", moves: [
 				["Psycho Crusher", "Avance", "Se envuelve en Psycho Power y atraviesa al oponente en línea recta.", ["←", "mantener", "→", "＋", "P"]],
 				["Double Knee Press", "Avance", "Dos rodillazos voladores que recorren el escenario.", ["←", "mantener", "→", "＋", "K"]],
 				["Backfist Combo", "Marca", "Un golpe de revés que coloca una bomba psíquica sobre el rival.", ["↓", "↙", "←", "＋", "P"]]
@@ -491,7 +491,7 @@
 				["Scratch Wheel", "Antiaéreo", "Una patada ascendente giratoria que cubre el espacio aéreo.", ["→", "↓", "↘", "＋", "K"]],
 				["Lynx Tail", "Patada", "Una patada acrobática que cambia el ritmo a media distancia.", ["↓", "↘", "→", "＋", "K"]]
 			]},
-			{ id: "sagat", name: "Sagat", title: "El emperador del Muay Thai", country: "Tailandia", style: "zoner", styleName: "Zoner", color: "#927142", wiki: "Sagat", dlc: "Año 3", bio: "Gigante del Muay Thai que controla el combate con golpes largos y sus icónicos Tiger Shots.", moves: [
+			{ id: "sagat", name: "Sagat", title: "El emperador del Muay Thai", country: "Tailandia", style: "shoto", styleName: "Shoto", color: "#927142", wiki: "Sagat", dlc: "Año 3", bio: "Gigante del Muay Thai que controla el combate con golpes largos y sus icónicos Tiger Shots.", moves: [
 				["High Tiger Shot", "Proyectil", "Dispara una bola de fuego alta para frenar saltos y avances.", ["↓", "↘", "→", "＋", "P"]],
 				["Low Tiger Shot", "Proyectil", "Una onda baja que obliga al rival a reaccionar desde el suelo.", ["↓", "↘", "→", "＋", "K"]],
 				["Tiger Uppercut", "Antiaéreo", "Un uppercut de gran alcance que defiende el espacio aéreo.", ["→", "↓", "↘", "＋", "P"]]
@@ -506,7 +506,7 @@
 				["Power Bomb", "Agarre", "Sujeta al rival de cerca y lo estrella contra el suelo.", ["cerca", "→", "＋", "P"]],
 				["Slash Elbow", "Avance", "Se lanza hacia delante con un codazo de gran alcance.", ["←", "mantener", "→", "＋", "P"]]
 			]},
-			{ id: "ingrid", name: "Ingrid", title: "La viajera solar", country: "Desconocido", style: "technical", styleName: "Técnica", color: "#b38b52", wiki: "Ingrid (Capcom)", dlc: "Año 3", bio: "Enigmática viajera con poderes solares y desplazamientos singulares que descolocan al oponente.", moves: [
+			{ id: "ingrid", name: "Ingrid", title: "La viajera solar", country: "Desconocido", style: "zoner", styleName: "Zoner", color: "#b38b52", wiki: "Ingrid (Capcom)", dlc: "Año 3", bio: "Enigmática viajera con poderes solares y desplazamientos singulares que descolocan al oponente.", moves: [
 				["Sunshot", "Proyectil", "Concentra energía solar y la lanza en una esfera luminosa.", ["↓", "↘", "→", "＋", "P"]],
 				["Sun Rise", "Antiaéreo", "Se eleva con un destello de energía para cubrir los saltos.", ["→", "↓", "↘", "＋", "K"]],
 				["Solar Burst", "Ráfaga", "Libera una descarga solar que presiona a corta distancia.", ["↓", "↙", "←", "＋", "P"]]
@@ -518,6 +518,13 @@
 		const search = document.querySelector("#search");
 		const resultCount = document.querySelector("#result-count");
 		const rosterTotal = document.querySelector("#roster-total");
+		const portraitSlugs = {
+			ryu: "ryu", ken: "ken", luke: "luke", jamie: "jamie", "chun-li": "chunli", guile: "guile",
+			kimberly: "kimberly", juri: "juri", blanka: "blanka", dhalsim: "dhalsim", "e-honda": "ehonda",
+			"dee-jay": "deejay", manon: "manon", marisa: "marisa", jp: "jp", zangief: "zangief", lily: "lily",
+			cammy: "cammy", rashid: "rashid", aki: "aki", ed: "ed", akuma: "gouki_akuma", bison: "vega_mbison",
+			terry: "terry", mai: "mai", elena: "elena", sagat: "sagat", viper: "cviper", alex: "alex", ingrid: "ingrid"
+		};
 		let activeFilter = "all";
 		let selectedId = "ryu";
 
@@ -558,32 +565,27 @@
 			resultCount.textContent = `${visible.length} ${visible.length === 1 ? "luchador" : "luchadores"}`;
 			roster.innerHTML = visible.length ? visible.map((fighter, index) => `
 				<button class="fighter-card" type="button" data-id="${fighter.id}" aria-pressed="${fighter.id === selectedId}" style="--portrait-color:${fighter.color};animation-delay:${Math.min(index * 25, 250)}ms">
-					<span class="portrait" id="portrait-${fighter.id}"><span class="portrait-fallback" aria-hidden="true">${fighter.name.split(/[- .]/).map(part => part[0]).join("").slice(0, 2)}</span><span class="card-index">${String(fighters.indexOf(fighter) + 1).padStart(2, "0")}</span><span class="card-rank${fighter.dlc ? " dlc" : ""}">${fighter.dlc ? `DLC · ${fighter.dlc}` : fighter.styleName}</span></span>
+					<span class="portrait" id="portrait-${fighter.id}"><span class="portrait-fallback" aria-hidden="true">${fighter.name.split(/[- .]/).map(part => part[0]).join("").slice(0, 2)}</span><span class="card-index">${String(fighters.indexOf(fighter) + 1).padStart(2, "0")}</span><span class="card-rank">${fighter.styleName}</span></span>
 					<span class="card-copy"><span class="card-name">${fighter.name}</span><span class="card-origin">${fighter.title} · ${fighter.country}</span></span>
 				</button>`).join("") : `<div class="empty-state">No encontramos luchadores con esa búsqueda.</div>`;
 			document.querySelectorAll(".fighter-card").forEach(card => card.addEventListener("click", () => selectFighter(card.dataset.id)));
 			loadPortraits(visible);
+			if (visible.length === 1) selectFighter(visible[0].id);
 		}
 
 		function loadPortraits(list) {
-			const pages = list.filter(fighter => !document.querySelector(`#portrait-${fighter.id} img`));
-			if (!pages.length) return;
-			const titles = pages.map(fighter => fighter.wiki).join("|");
-			const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages&piprop=thumbnail&pithumbsize=480&titles=${encodeURIComponent(titles)}&origin=*`;
-			fetch(url).then(response => response.ok ? response.json() : Promise.reject()).then(data => {
-				const byTitle = new Map(pages.map(fighter => [fighter.wiki.replaceAll("_", " "), fighter]));
-				Object.values(data.query.pages).forEach(page => {
-					const fighter = byTitle.get(page.title);
-					const portrait = fighter && document.querySelector(`#portrait-${fighter.id}`);
-					if (!portrait || !page.thumbnail?.source) return;
-					const image = new Image();
-					image.alt = `Imagen de ${fighter.name}`;
-					image.loading = "lazy";
-					image.onload = () => portrait.classList.add("has-image");
-					image.src = page.thumbnail.source;
-					portrait.prepend(image);
-				});
-			}).catch(() => {});
+			list.forEach(fighter => {
+				const portrait = document.querySelector(`#portrait-${fighter.id}`);
+				const slug = portraitSlugs[fighter.id];
+				if (!portrait || !slug || portrait.querySelector("img")) return;
+				const image = new Image();
+				image.alt = `Imagen oficial de ${fighter.name}`;
+				image.loading = "lazy";
+				image.onload = () => portrait.classList.add("has-image");
+				image.onerror = () => image.remove();
+				image.src = `https://www.streetfighter.com/6/assets/images/character/${slug}/${slug}.png`;
+				portrait.prepend(image);
+			});
 		}
 
 		function selectFighter(id) {
